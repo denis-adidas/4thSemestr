@@ -55,15 +55,18 @@ public class matrix {
 
 
     }
-    public String toStr() {
-        String c = "matrix{size = " + size + "\nmat value: \n";
+    public String toString() {
+        StringBuilder c = new StringBuilder();
+        c.append("matrix{size = ").append(size).append("\nmat value: \n");
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
-                c += " " + getValue(i, j);
+                c.append(" ").append(getValue(i, j));
             }
-            c += "\n";
+            c.append("\n");
         }
-        return c + "}";
+        c.append("}");
+
+        return c.toString();
 
     }
 }
