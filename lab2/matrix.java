@@ -69,4 +69,26 @@ public class matrix {
         return c.toString();
 
     }
+    public matrix doMiracle(int key) {
+        int temp_val = 0;
+        if (key == 1) {
+            for (int i = 0; i < size / 2; i++) {
+                for (int j = 0; j < size; j++) {
+                    temp_val = this.getValue(i, j);
+                    this.setMat(i, j, getValue(j, i));
+                    this.setMat(j, i, temp_val);
+                }
+            }
+        }
+        if (key == 0) {
+            for (int i = 0; i < size / 2; i++) {
+                for (int j = 0; j < size; j++) {
+                    temp_val = this.getValue(i, j);
+                    this.setMat(i, j, getValue(size - j - 1, size - i - 1));
+                    this.setMat(size -j - 1, size - i - 1, temp_val);
+                }
+            }
+        }
+        return this;
+    }
 }
