@@ -1,7 +1,7 @@
 package Matrixes;
 public class Matrix {
-    private int row;
-    private int col;
+    protected int row;
+    protected int col;
     protected int[][] mat;
 
     public Matrix(int row, int col) {
