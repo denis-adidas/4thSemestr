@@ -5,6 +5,7 @@ public class FourPartMatrix extends Matrix {
   int extra_col;
 
 public FourPartMatrix(Matrix a) {
+
   super(a.row, a.col);
 
   this.extra_row = a.row;
@@ -24,6 +25,8 @@ public FourPartMatrix(Matrix a) {
       throw new MatErrors("Out of bound");
   }
   public void setMat(int r, int c, int value) {
+    r = r % extra_row;
+    c = c % extra_col;
     if (((r >= 0) && (r <= row)) && ((c >= 0) && (c <= col))) {
       mat[r][c] = value;
     }
