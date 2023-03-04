@@ -10,7 +10,7 @@ public class Matrix {
         mat = new int[row][col];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                this.setMat(i, j, 0);
+                mat[i][j] = 0;
             }
         }
     }
@@ -20,7 +20,7 @@ public class Matrix {
         mat = new int[row][col];
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
-                this.setMat(i, j, val);
+                mat[i][j] = val;
             }
         }
     }
