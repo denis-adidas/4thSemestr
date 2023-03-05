@@ -3,7 +3,17 @@ package Matrixes;
 public class FourPartMatrix extends Matrix {
   int extra_row;
   int extra_col;
+  public FourPartMatrix(int row, int col) {
+        super(row / 2, col / 2);
+        if ((row  % 2 != 0) || (col % 2 != 0))
+          throw new MatErrors("Wrong size. Multiply rows and columns should be even");
 
+    this.extra_row = row / 2;
+    this.extra_col = col / 2;
+
+    this.row = row;
+    this.col = col;
+  }
 public FourPartMatrix(Matrix a) {
 
   super(a.row, a.col);
