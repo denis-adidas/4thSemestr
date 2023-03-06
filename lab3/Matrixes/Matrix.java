@@ -41,7 +41,7 @@ public class Matrix {
 
     public Matrix sum(Matrix a) {
 
-        if ((row != a.row) && (col != a.col)) {
+        if ((row != a.row) || (col != a.col)) {
             throw new MatErrors("Matrix's size are differents");
         }
         Matrix temp = new Matrix(row, col);
@@ -73,14 +73,19 @@ public class Matrix {
     }
     public boolean equals(Matrix a) {
         boolean flag = true;
-        for (int i = 0; i < row; i++)
-            for (int j = 0; j < col; j++) {
-                if(getValue(i, j) != a.getValue(i, j)){
-                    flag = false;
-                    break;
+        if (a != null) {
+            for (int i = 0; i < row; i++)
+                for (int j = 0; j < col; j++) {
+                    if (getValue(i, j) != a.getValue(i, j)) {
+                        flag = false;
+                        break;
+                    }
                 }
-            }
-        return flag;
+            return flag;
+        }
+        else {
+            return false;
+        }
     }
 
     public final String toString() {
