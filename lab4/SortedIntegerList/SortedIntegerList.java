@@ -45,6 +45,12 @@ public class SortedIntegerList {
     public boolean equal(SortedIntegerList a) {
         if (this.head == a.head)
             return true;
+        if (head.size() != a.head.size()) {
+            return false;
+        }
+        if (this.DuplicatePermission != a.DuplicatePermission) {
+            return false;
+        }
         if (a instanceof SortedIntegerList) {
             ListIterator<Integer> ThisIt = head.listIterator();
             ListIterator<Integer> OtherIt = a.head.listIterator();
@@ -54,14 +60,29 @@ public class SortedIntegerList {
                     return false;
             }
         }
-        if (head.size() != a.head.size()) {
-            return false;
-        }
-        if (this.DuplicatePermission != a.DuplicatePermission) {
-            return false;
-        }
         return false;
     }
+
+    public SortedIntegerList getLessThan(int val) {
+        /* доходим до этого числа, находим индекс
+        возвращаем новый лист с такими же числами, что меньше индекса
+         */
+        ListIterator<Integer> it = head.listIterator();
+        while (it.hasNext()) {
+            Integer current = it.next();
+            if (val == current) {
+                int i = 0;
+                SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
+                while (i != this.head.indexOf(current)) {
+                    lessList.add(head.get(i));
+                    i++;
+                }
+                return lessList;
+                }
+            }
+            SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
+            return lessList;
+        }
 
     @Override
     public String toString() {
