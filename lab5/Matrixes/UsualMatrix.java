@@ -39,9 +39,19 @@ public class UsualMatrix implements Matrix {
             throw new MatErrors("Out of bound");
     }
 
+    @Override
+    public int getRow() {
+        return row;
+    }
+
+    @Override
+    public int getCol() {
+        return col;
+    }
+
     public Matrix add(Matrix a) {
 
-        if ((row != a.row) || (col != a.col)) {
+        if ((row != a.getRow()) || (col != a.getCol())) {
             throw new MatErrors("Matrix's size are differents");
         }
         Matrix temp = new UsualMatrix(row, col);
@@ -55,10 +65,10 @@ public class UsualMatrix implements Matrix {
 
     public Matrix product(Matrix a) {
 
-        if (col == a.row) {
-            Matrix temp_mat = new UsualMatrix(row, a.col);
+        if (col == a.getRow()) {
+            Matrix temp_mat = new UsualMatrix(row, a.getCol());
             for (int i = 0; i < row; i++) {
-                for (int j = 0; j < a.col; j++) {
+                for (int j = 0; j < a.getCol(); j++) {
                     int temp = 0;
                     for (int k = 0; k < col; k++) {
                         temp += this.getValue(i, k) * a.getValue(k, j);
