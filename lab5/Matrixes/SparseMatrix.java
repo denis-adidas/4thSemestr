@@ -8,7 +8,7 @@ public class SparseMatrix implements Matrix {
     int row;
     int col;
 
-    SparseMatrix(int row, int col) {
+    public SparseMatrix(int row, int col) {
         this.row = row;
         this.col = col;
 
@@ -17,23 +17,47 @@ public class SparseMatrix implements Matrix {
             table[i] = new LinkedList<Node>();
     }
 
+
     @Override
-    public Matrix add(Matrix a) throws SumMatrixException {
-        if ((row != a.row) || (col != a.col)) {
-            throw new MatErrors("Matrix's size are differents");
-        }
-        Matrix temp = new UsualMatrix(row, col);
+    public int getRow() {
+        return row;
+    }
+
+    @Override
+    public int getCol() {
+        return col;
+    }
+
+    public SparseMatrix add(Matrix a) throws SumMatrixException {
+        SparseMatrix temp = new SparseMatrix(row, col);
         for (int i = 0; i < row; i++) {
             for (int j = 0; j < col; j++) {
                 temp.setValue(i, j, this.getValue(i, j) + a.getValue(i, j));
             }
         }
+        if ((row != a.getRow()) || (col != a.getCol())) {
+            throw new MatErrors("Matrix's size are differents");
+        }
         return temp;
     }
 
     @Override
-    public Matrix product(Matrix a) throws ProductMatrixException {
-        return null;
+    public SparseMatrix product(Matrix a)  {
+        if (col == a.getRow()) {
+            SparseMatrix temp_mat = new SparseMatrix(row, a.getRow());
+            for (int i = 0; i < row; i++) {
+                for (int j = 0; j < a.getCol(); j++) {
+                    int temp = 0;
+                    for (int k = 0; k < col; k++) {
+                        temp += this.getValue(i, k) * a.getValue(k, j);
+                    }
+                    temp_mat.setValue(i, j, temp);
+                }
+            }
+            return temp_mat;
+        } else {
+            throw new MatErrors("Differents sizes of matrix");
+        }
     }
 
     @Override
@@ -66,11 +90,34 @@ public class SparseMatrix implements Matrix {
 
     @Override
     public boolean equal(Matrix a) {
-        return false;
+        boolean flag = true;
+        if (a != null) {
+            for (int i = 0; i < row; i++)
+                for (int j = 0; j < col; j++) {
+                    if (getValue(i, j) != a.getValue(i, j)) {
+                        flag = false;
+                        break;
+                    }
+                }
+            return flag;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public String toString() {
-        return null;
+        StringBuilder c = new StringBuilder();
+        c.append("matrix{rows = ").append(row).append(" columns = ").append(col).append("\nmat value: \n");
+        for (int i = 0; i < row; i++) {
+            for (int j = 0; j < col; j++) {
+                c.append(" ").append(getValue(i, j));
+            }
+            c.append("\n");
+        }
+        c.append("}");
+
+        return c.toString();
     }
 }
