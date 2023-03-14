@@ -1,7 +1,8 @@
 package Matrixes;
 public interface Matrix {
-    int row = 0;
-    int col = 0;
+
+    int getRow();
+    int getCol();
     Matrix add(Matrix a) throws SumMatrixException;
     Matrix product(Matrix a) throws ProductMatrixException;
     int getValue(int row, int col);
