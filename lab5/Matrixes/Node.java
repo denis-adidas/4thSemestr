@@ -8,6 +8,18 @@ public class Node {
         this.index = idx;
         this.value = value;
     }
+    int getIndex() {
+        return index;
+    }
+    int getValue() {
+        return value;
+    }
+    void setIndex(int val) {
+        this.index = val;
+    }
+    void setValue(int val) {
+        this.value = val;
+    }
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
