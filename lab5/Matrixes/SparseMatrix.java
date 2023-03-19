@@ -17,7 +17,6 @@ public class SparseMatrix implements Matrix {
             table[i] = new LinkedList<Node>();
     }
 
-
     @Override
     public int getRow() {
         return row;
@@ -27,6 +26,7 @@ public class SparseMatrix implements Matrix {
     public int getCol() {
         return col;
     }
+
 
     public SparseMatrix add(Matrix a) throws SumMatrixException {
         SparseMatrix temp = new SparseMatrix(row, col);
@@ -42,9 +42,9 @@ public class SparseMatrix implements Matrix {
     }
 
     @Override
-    public SparseMatrix product(Matrix a)  {
+    public SparseMatrix product(Matrix a) throws ProductMatrixException {
         if (col == a.getRow()) {
-            SparseMatrix temp_mat = new SparseMatrix(row, a.getRow());
+            SparseMatrix temp_mat = new SparseMatrix(row, a.getCol());
             for (int i = 0; i < row; i++) {
                 for (int j = 0; j < a.getCol(); j++) {
                     int temp = 0;
@@ -62,7 +62,7 @@ public class SparseMatrix implements Matrix {
 
     @Override
     public int getValue(int row, int col) {
-        if ((row > this.row) || (col > this.col))
+        if ((row >= this.row) || (col >= this.col))
             throw new MatErrors("Unable to execute: out of bound");
         for (Node it : table[row]) {
             if (it.getIndex() == col)
@@ -73,7 +73,7 @@ public class SparseMatrix implements Matrix {
 
     @Override
     public void setValue(int row, int col, int value) {
-        if ((row > this.row) || (col > this.col))
+        if ((row >= this.row) || (col >= this.col))
             throw new MatErrors("Unable to execute: out of bound");
         if (getValue(row, col) != 0) {
             for (Node it : table[row]) {
