@@ -78,11 +78,14 @@ public class SortedIntegerList {
                     i++;
                 }
                 return lessList;
-                }
             }
-            SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
-            return lessList;
         }
+
+        SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
+        for (Integer sit : this.head)
+            lessList.add(sit);
+        return lessList;
+    }
 
     @Override
     public String toString() {
