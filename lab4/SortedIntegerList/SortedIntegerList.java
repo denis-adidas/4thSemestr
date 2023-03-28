@@ -1,4 +1,6 @@
 package SortedIntegerList;
+import com.sun.org.apache.xml.internal.utils.res.IntArrayWrapper;
+
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Objects;
@@ -68,8 +70,14 @@ public class SortedIntegerList {
         возвращаем новый лист с такими же числами, что меньше индекса
          */
         ListIterator<Integer> it = head.listIterator();
+        Integer current = it.next();
+
+        if (current >= val) {
+            SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
+            return lessList;
+        }
         while (it.hasNext()) {
-            Integer current = it.next();
+            current = it.next();
             if (val == current) {
                 int i = 0;
                 SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
@@ -80,7 +88,6 @@ public class SortedIntegerList {
                 return lessList;
             }
         }
-
         SortedIntegerList lessList = new SortedIntegerList(this.DuplicatePermission);
         for (Integer sit : this.head)
             lessList.add(sit);
