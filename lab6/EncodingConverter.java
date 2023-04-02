@@ -11,15 +11,12 @@ public class EncodingConverter {
 
 //        String help = "--help";
 
-        if (args.length < 3) {
+        if (args.length < 3 || args[0].equals("--help")) {
             System.out.println("Error: insufficient arguments. Usage: java EncodingConverter <input file> <output file> <encoding>");
-            return;
-        }
-
-        if (args[0].equals("--help")) {
             System.out.println(help());
             return;
         }
+
 
         File inputFile = new File(args[0]);
         File outputFile = new File(args[1]);
@@ -79,7 +76,7 @@ public class EncodingConverter {
         while ((c = reader.read()) >= 0) {
             writer.write(c);
         }
-        System.out.print("Complete encoding!🍺");
+        System.out.print("Complete encoding!🍺\n");
         reader.close();
         writer.close();
 
@@ -95,6 +92,6 @@ public class EncodingConverter {
     }
 
     public static boolean isFileExists(File file) {
-        return file.exists() && !file.isDirectory();
+        return file.exists() && !file.isDirectory() && file.canRead();
     }
 };
