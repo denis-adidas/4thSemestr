@@ -1,11 +1,12 @@
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.lang.Integer.parseInt;
 
-public class Settings {
+public class Settings implements Serializable {
     private HashMap<String, Integer> Setting;
     int count;
     boolean Default;
@@ -55,10 +56,25 @@ public class Settings {
             throw new FileNotFoundException("Error: file not found or can't be reading.");
         }
     }
-    public void saveInTextFile(File out) {
-
+    public void loadFromBinaryFile(File in) throws FileNotFoundException {
+        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(in))) {
+            while (dataInputStream.available() > 0) {
+                String key = dataInputStream.readUTF();
+                int value = dataInputStream.readInt();
+                Setting.put(key, value);
+            }
+        } catch (IOException e) {
+            throw new FileNotFoundException("Error: file not found or can't be reading.");
+        }
     }
-        public static boolean isFileExists(File file) {
-        return file.exists() && !file.isDirectory() && file.canRead();
+    public void saveInTextFile(File out) throws FileNotFoundException {
+        PrintWriter writer = new PrintWriter(out);
+        writer.println(this.toString());
+        writer.close();
+    }
+    public void saveInBinaryFile(File out) throws IOException {
+        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(out))) {
+            objectOutputStream.writeObject(this);
+        }
     }
 }
