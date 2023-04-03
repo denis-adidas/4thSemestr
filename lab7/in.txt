@@ -1,0 +1,3 @@
+String 1
+Mode 2
+Tudasuda 5
