@@ -1,5 +1,6 @@
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.security.KeyPair;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,8 +25,18 @@ public class Settings implements Serializable {
         c.append("\n Default: " + Default);
         return c.toString();
     }
-    public boolean equals(Settings a) {
-        return this.Setting.equals(a.Setting);
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+
+        if (!(obj instanceof Settings)) {
+            return false;
+        }
+
+        Settings settings = (Settings) obj;
+        return settings.Setting.equals(this.Setting);
     }
 
     public void put(String setting, int mode) {
@@ -56,18 +67,32 @@ public class Settings implements Serializable {
             throw new FileNotFoundException("Error: file not found or can't be reading.");
         }
     }
-    public void loadFromBinaryFile(File in) throws FileNotFoundException {
-        try (DataInputStream dataInputStream = new DataInputStream(new FileInputStream(in))) {
-            while (dataInputStream.available() > 0) {
-                String key = dataInputStream.readUTF();
-                int value = dataInputStream.readInt();
+    public void loadFromBinaryFile(File filename) throws IOException {
+        try (DataInputStream input = new DataInputStream(new FileInputStream(filename))) {
+            try {
+                String key = input.readUTF();
+                int value = input.readInt();
                 Setting.put(key, value);
-            }
-        } catch (IOException e) {
-            throw new FileNotFoundException("Error: file not found or can't be reading.");
+            } catch (EOFException e) {
+                return;
+              }
         }
     }
-    public void saveInTextFile(File out) throws FileNotFoundException {
+//public void loadFromBinaryFile(String filename) throws FileNotFoundException, RuntimeException {
+//        try {
+////            String src = "C:\\Users\\zxggx\\IdeaProjects\\laba7\\src\\";
+//            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
+//            String a = in.readLine();
+//            String[] c = a.split(" ");
+//            for (int i = 0;i<c.length;i++) {
+//                String[] b = c[i].split(":");
+//                this.put(b[0], Integer.parseInt(b[1]));
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
+    public void saveInTextFile(File out) throws FileNotFoundException, UnsupportedEncodingException {
         PrintWriter writer = new PrintWriter(out);
         writer.println(this.toString());
         writer.close();
