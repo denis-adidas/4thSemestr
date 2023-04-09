@@ -5,6 +5,68 @@ import java.util.*;
 import static java.lang.Integer.parseInt;
 
 public class Graph {
+    private static final String[] AccessText = {"Text", "text", "TEXT", "txt", "TXT", ".txt"};
+    private static final String[] AccessBin = {"Binary", "binary", "BINARY", "bin", "BIN", ".bin"};
+
+    public void GraphStore(String InputFileName, String InputFileType) throws IOException {
+        if (InputFileName == null || InputFileType == null)
+            throw new IOException("Error: input file name or type are null \n");
+        for (String it : AccessText) {
+            if (InputFileType == it) {
+                this.loadFromTextFile(InputFileName);
+                return;
+            }
+        }
+        for (String it : AccessBin) {
+            if (InputFileType == it) {
+                this.loadFromBinaryFile(InputFileName);
+                return;
+            }
+        }
+    }
+    public void GraphStore(String InputFileName, String InputFileType, String OutputFileName, String OutputFileType) throws IOException {
+        GraphStore(InputFileName, InputFileType);
+        if (OutputFileName == null || OutputFileType == null)
+            throw new IOException("Error: output file name or type are null \n");
+        for (String it : AccessText) {
+            if (OutputFileType == it) {
+                this.saveInTextFile(OutputFileName);
+                return;
+            }
+        }
+        for (String it : AccessBin) {
+            if (OutputFileType == it) {
+                this.saveInBinaryFile(OutputFileName);
+                return;
+            }
+        }
+
+
+    }
+
+    public static void main(String[] args) throws IOException {
+        if (args.length < 3 || args[0].equals("--help")) {
+            System.out.println("Error: insufficient arguments. Usage: java Graph.java <count of nodes> <input file name> <type of input file> <output file name> <type of output file>");
+            System.out.println(help());
+            return;
+        }
+
+        int nodes = parseInt(args[0]);
+        String InputFileName = args[1];
+        String InputFileType = args[2];
+
+//        String OutputFileName = null;
+//        String OutputFileType = null;
+//        if (args.length > 3) {
+//            OutputFileName = args[3];
+//            OutputFileType = args[4];
+//        }
+
+        Graph a = new Graph(nodes);
+
+        a.GraphStore(InputFileName, InputFileType);
+        System.out.println("🍺Complete!");
+    }
     private List<List<Integer>> adjacencyList;
     int nodes;
 
@@ -34,6 +96,7 @@ public class Graph {
         Graph obj_nodes = (Graph)obj;
         return obj_nodes.adjacencyList.equals(this.adjacencyList);
     }
+
     public void append(int node, int edge) {
         if ((node >= 0 && node < nodes) && (edge >= 0 && edge < nodes))
             if (adjacencyList.get(node).contains(edge))
@@ -106,5 +169,11 @@ public class Graph {
         catch (IOException e) {
             throw new IOException("Error: " + e.getMessage());
         }
+    }
+    private static String help() {
+        StringBuilder c = new StringBuilder();
+        c.append("Hello, it's GraphDock. If you need to store your graph from Text or Binary file, then write \n" +
+                "it like this \"java Graph.java <count of nodes> <input file name> <output file name> <type of input file> <type of output file>\" \n");
+        return c.toString();
     }
 }
