@@ -30,11 +30,9 @@ public class Settings implements Serializable {
         if (obj == this) {
             return true;
         }
-
         if (!(obj instanceof Settings)) {
             return false;
         }
-
         Settings settings = (Settings) obj;
         return settings.Setting.equals(this.Setting);
     }
@@ -54,52 +52,53 @@ public class Settings implements Serializable {
         else
             throw new IllegalArgumentException("Error: no such setting in config \n");
     }
-    public void loadFromTextFile(File in) throws FileNotFoundException {
-          try (FileReader fileReader = new FileReader(in)) {
+    public void loadFromTextFile(String filename) throws IOException, UnsupportedEncodingException {
+        try (FileReader fileReader = new FileReader(filename)) {
             BufferedReader bufferedReader = new BufferedReader(fileReader);
             String[] settings;
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                settings = line.split(" ");
-                Setting.put(settings[0], parseInt(settings[1]));
+                settings = line.split(" = ");
+                if (settings.length != 2) {
+                    throw new IllegalArgumentException("Invalid input format");
+                }
+                Setting.put(settings[0].trim(), parseInt(settings[1].trim()));
             }
         } catch (IOException e) {
-            throw new FileNotFoundException("Error: file not found or can't be reading.");
+            throw new IOException("Error: " + e.getMessage());
         }
     }
-    public void loadFromBinaryFile(File filename) throws IOException {
-        try (DataInputStream input = new DataInputStream(new FileInputStream(filename))) {
-            try {
+    public void loadFromBinaryFile(String file) throws IOException {
+        try (DataInputStream input = new DataInputStream(new FileInputStream(file))) {
+            while (input.available() > 0) {
                 String key = input.readUTF();
                 int value = input.readInt();
                 Setting.put(key, value);
-            } catch (EOFException e) {
-                return;
-              }
+            }
+        }
+        catch (IOException e) {
+            throw new IOException("Error: " + e.getMessage());
         }
     }
-//public void loadFromBinaryFile(String filename) throws FileNotFoundException, RuntimeException {
-//        try {
-////            String src = "C:\\Users\\zxggx\\IdeaProjects\\laba7\\src\\";
-//            BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-//            String a = in.readLine();
-//            String[] c = a.split(" ");
-//            for (int i = 0;i<c.length;i++) {
-//                String[] b = c[i].split(":");
-//                this.put(b[0], Integer.parseInt(b[1]));
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-    public void saveInTextFile(File out) throws FileNotFoundException, UnsupportedEncodingException {
-        PrintWriter writer = new PrintWriter(out);
-        writer.println(this.toString());
-        writer.close();
+    public void saveInTextFile(String filename) throws IOException {
+        try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename))) {
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, StandardCharsets.UTF_8));
+            writer.println(this.toString());
+            writer.close();
+        }
+        catch (IOException e){
+            throw new IOException("Error: " + e.getMessage());
+        }
     }
-    public void saveInBinaryFile(File out) throws IOException {
-        try (ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(out))) {
-            objectOutputStream.writeObject(this);
+    public void saveInBinaryFile(String filename) throws IOException {
+        try (DataOutputStream output = new DataOutputStream(new FileOutputStream(filename))) {
+            for (Map.Entry<String, Integer> entry : Setting.entrySet()) {
+                output.writeUTF(entry.getKey());
+                output.writeInt(entry.getValue());
+            }
+        }
+        catch (IOException e) {
+            throw new IOException("Error: " + e.getMessage());
         }
     }
 }
