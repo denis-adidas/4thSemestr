@@ -12,13 +12,13 @@ public class Graph {
         if (InputFileName == null || InputFileType == null)
             throw new IOException("Error: input file name or type are null \n");
         for (String it : AccessText) {
-            if (InputFileType == it) {
+            if (InputFileType.equals(it)) {
                 this.loadFromTextFile(InputFileName);
                 return;
             }
         }
         for (String it : AccessBin) {
-            if (InputFileType == it) {
+            if (InputFileType.equals(it)) {
                 this.loadFromBinaryFile(InputFileName);
                 return;
             }
@@ -26,21 +26,22 @@ public class Graph {
     }
     public void GraphStore(String InputFileName, String InputFileType, String OutputFileName, String OutputFileType) throws IOException {
         GraphStore(InputFileName, InputFileType);
-        if (OutputFileName == null || OutputFileType == null)
-            throw new IOException("Error: output file name or type are null \n");
-        for (String it : AccessText) {
-            if (OutputFileType == it) {
-                this.saveInTextFile(OutputFileName);
-                return;
-            }
-        }
-        for (String it : AccessBin) {
-            if (OutputFileType == it) {
-                this.saveInBinaryFile(OutputFileName);
-                return;
-            }
-        }
+        if (OutputFileName != null && OutputFileType != null) {
 
+            for (String it : AccessText) {
+                if (OutputFileType.equals(it)) {
+                    this.saveInTextFile(OutputFileName);
+                    return;
+                }
+            }
+            for (String it : AccessBin) {
+                if (OutputFileType.equals(it)) {
+                    this.saveInBinaryFile(OutputFileName);
+                    return;
+                }
+            }
+        }
+        System.out.println("🍺Complete!");
 
     }
 
@@ -55,17 +56,17 @@ public class Graph {
         String InputFileName = args[1];
         String InputFileType = args[2];
 
-//        String OutputFileName = null;
-//        String OutputFileType = null;
-//        if (args.length > 3) {
-//            OutputFileName = args[3];
-//            OutputFileType = args[4];
-//        }
+        String OutputFileName = null;
+        String OutputFileType = null;
+        if (args.length > 3) {
+            OutputFileName = args[3];
+            OutputFileType = args[4];
+        }
 
         Graph a = new Graph(nodes);
 
-        a.GraphStore(InputFileName, InputFileType);
-        System.out.println("🍺Complete!");
+        a.GraphStore(InputFileName, InputFileType, OutputFileName, OutputFileType);
+
     }
     private List<List<Integer>> adjacencyList;
     int nodes;
@@ -90,7 +91,7 @@ public class Graph {
         if (obj == this) {
             return true;
         }
-        if (!(obj instanceof Settings)) {
+        if (!(obj instanceof Graph)) {
             return false;
         }
         Graph obj_nodes = (Graph)obj;
@@ -116,7 +117,7 @@ public class Graph {
     }
     public boolean isConnect(int first_node, int second_node) {
         if ((first_node >= 0 && first_node < nodes) && (second_node >= 0 && second_node < nodes))
-            return adjacencyList.get(first_node).get(second_node) > 0;
+            return adjacencyList.get(first_node).contains(second_node);
         return false;
     }
     public void loadFromTextFile(String filename) throws IOException, UnsupportedEncodingException {
@@ -127,7 +128,7 @@ public class Graph {
             while ((line = bufferedReader.readLine()) != null) {
                 input_nodes = line.split(" ");
                 if (input_nodes.length != 2) {
-                    throw new IllegalArgumentException("Invalid input format");
+                    throw new IllegalArgumentException("Invalid input format: " + line);
                 }
                 this.append(parseInt(input_nodes[0].trim()) - 1, parseInt(input_nodes[1].trim()) - 1);
             }
@@ -135,8 +136,8 @@ public class Graph {
             throw new IOException("Error: " + e.getMessage());
         }
     }
-    public void loadFromBinaryFile(String file) throws IOException {
-        try (DataInputStream input = new DataInputStream(new FileInputStream(file))) {
+    public void loadFromBinaryFile(String filename) throws IOException {
+        try (DataInputStream input = new DataInputStream(new FileInputStream(filename))) {
             while (input.available() > 0) {
                 int node = input.readInt();
                 int edge = input.readInt();
