@@ -1,0 +1,3 @@
+Settings: 
+{Tudasuda=5, Mode=2, String=1}
+ Default: true
